@@ -50,8 +50,8 @@ export const parseNumber = (s: string): IntegerTimesPower | null => {
 };
 
 export interface Fraction {
-  numerator: bigint;
-  denominator: bigint;
+  num: bigint;
+  den: bigint;
 }
 
 export const parseFraction = (s: string): Fraction | null => {
@@ -68,13 +68,13 @@ export const parseFraction = (s: string): Fraction | null => {
   const exponent = num.exponent - den.exponent;
   if (exponent >= 0n) {
     return {
-      numerator: num.mantissa * 10n ** exponent,
-      denominator: den.mantissa,
+      num: num.mantissa * 10n ** exponent,
+      den: den.mantissa,
     };
   } else {
     return {
-      numerator: num.mantissa,
-      denominator: den.mantissa * 10n ** -exponent,
+      num: num.mantissa,
+      den: den.mantissa * 10n ** -exponent,
     };
   }
 };

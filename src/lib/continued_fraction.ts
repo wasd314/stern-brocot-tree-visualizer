@@ -1,15 +1,10 @@
 import { type Fraction } from "./parse";
 
-export const toContinuedFraction = ({
-  numerator: a,
-  denominator: b,
-}: Fraction) => {
+export const toContinuedFraction = ({ num: a, den: b }: Fraction) => {
   const cf = [];
   while (b !== 0n) {
     cf.push(a / b);
-    const r = a % b;
-    a = b;
-    b = r;
+    [a, b] = [b, a % b];
   }
   return cf;
 };
@@ -21,8 +16,8 @@ interface DescendProps {
 }
 export const descend = ({ begin, diff, length }: DescendProps): Fraction => {
   return {
-    numerator: begin.numerator + diff.numerator * length,
-    denominator: begin.denominator + diff.denominator * length,
+    num: begin.num + diff.num * length,
+    den: begin.den + diff.den * length,
   };
 };
 
@@ -40,8 +35,8 @@ export const toSternBrocotAncients = (frac: Fraction) => {
   const cf = toContinuedFraction(frac);
   cf[cf.length - 1]--;
   const paths: Path[] = [];
-  let begin: Fraction = { numerator: 1n, denominator: 1n };
-  let diff: Fraction = { numerator: 1n, denominator: 0n };
+  let begin: Fraction = { num: 1n, den: 1n };
+  let diff: Fraction = { num: 1n, den: 0n };
   cf.forEach((length) => {
     paths.push({ begin, diff, length });
     const newBegin = descend({ begin, diff, length });

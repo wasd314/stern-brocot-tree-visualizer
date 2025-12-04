@@ -108,24 +108,24 @@ test("parseFraction: reject", () => {
 
 test("parseNumber: {numerator}", () => {
   [
-    { s: "1", numerator: 1n, denominator: 1n },
-    { s: "2", numerator: 2n, denominator: 1n },
-    { s: "2.5", numerator: 25n, denominator: 10n },
-    { s: "1e+0", numerator: 1n, denominator: 1n },
-    { s: "1e-0", numerator: 1n, denominator: 1n },
-    { s: "1e4", numerator: 10000n, denominator: 1n },
-    { s: "1e+4", numerator: 10000n, denominator: 1n },
-    { s: "1e-4", numerator: 1n, denominator: 10000n },
-    { s: "1E4", numerator: 10000n, denominator: 1n },
-    { s: "1E+4", numerator: 10000n, denominator: 1n },
-    { s: "1E-4", numerator: 1n, denominator: 10000n },
-    { s: "1.2e3", numerator: 1200n, denominator: 1n },
-    { s: "0010.3e-10", numerator: 103n, denominator: 100000000000n },
-    { s: "12.345e3", numerator: 12345n, denominator: 1n },
-    { s: "678.900e0", numerator: 6789n, denominator: 10n },
-    { s: "001010.01000", numerator: 101001n, denominator: 100n },
-    { s: "0001230.0003450000", numerator: 1230000345n, denominator: 1000000n },
-  ].forEach(({ s, numerator, denominator }) => {
-    expect(parseFraction(s)).toStrictEqual({ numerator, denominator });
+    { s: "1", num: 1n, den: 1n },
+    { s: "2", num: 2n, den: 1n },
+    { s: "2.5", num: 25n, den: 10n },
+    { s: "1e+0", num: 1n, den: 1n },
+    { s: "1e-0", num: 1n, den: 1n },
+    { s: "1e4", num: 10000n, den: 1n },
+    { s: "1e+4", num: 10000n, den: 1n },
+    { s: "1e-4", num: 1n, den: 10000n },
+    { s: "1E4", num: 10000n, den: 1n },
+    { s: "1E+4", num: 10000n, den: 1n },
+    { s: "1E-4", num: 1n, den: 10000n },
+    { s: "1.2e3", num: 1200n, den: 1n },
+    { s: "0010.3e-10", num: 103n, den: 100000000000n },
+    { s: "12.345e3", num: 12345n, den: 1n },
+    { s: "678.900e0", num: 6789n, den: 10n },
+    { s: "001010.01000", num: 101001n, den: 100n },
+    { s: "0001230.0003450000", num: 1230000345n, den: 1000000n },
+  ].forEach(({ s, num, den }) => {
+    expect(parseFraction(s)).toStrictEqual({ num, den });
   });
 });

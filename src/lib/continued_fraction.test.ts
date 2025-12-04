@@ -6,51 +6,45 @@ import {
 
 test("toContinuedFraction", () => {
   [
-    { numerator: 1n, denominator: 1n, cf: [1n] },
-    { numerator: 3n, denominator: 5n, cf: [0n, 1n, 1n, 2n] },
-    { numerator: 29n, denominator: 11n, cf: [2n, 1n, 1n, 1n, 3n] },
+    { num: 1n, den: 1n, cf: [1n] },
+    { num: 3n, den: 5n, cf: [0n, 1n, 1n, 2n] },
+    { num: 29n, den: 11n, cf: [2n, 1n, 1n, 1n, 3n] },
     {
-      numerator: 36524219n,
-      denominator: 100000n,
+      num: 36524219n,
+      den: 100000n,
       cf: [365n, 4n, 7n, 1n, 3n, 24n, 6n, 2n, 2n],
     },
-  ].forEach(({ numerator, denominator, cf }) => {
-    expect(toContinuedFraction({ numerator, denominator })).toStrictEqual(cf);
+  ].forEach(({ num, den, cf }) => {
+    expect(toContinuedFraction({ num, den })).toStrictEqual(cf);
   });
 });
 
 test("toSternBrocotAncients", () => {
-  expect(
-    toSternBrocotAncients({ numerator: 1n, denominator: 1n }),
-  ).toStrictEqual([
+  expect(toSternBrocotAncients({ num: 1n, den: 1n })).toStrictEqual([
     {
-      begin: { numerator: 1n, denominator: 1n },
-      diff: { numerator: 1n, denominator: 0n },
+      begin: { num: 1n, den: 1n },
+      diff: { num: 1n, den: 0n },
       length: 0n,
     },
   ]);
 
-  expect(
-    toSternBrocotAncients({ numerator: 5n, denominator: 1n }),
-  ).toStrictEqual([
+  expect(toSternBrocotAncients({ num: 5n, den: 1n })).toStrictEqual([
     {
-      begin: { numerator: 1n, denominator: 1n },
-      diff: { numerator: 1n, denominator: 0n },
+      begin: { num: 1n, den: 1n },
+      diff: { num: 1n, den: 0n },
       length: 4n,
     },
   ]);
 
-  expect(
-    toSternBrocotAncients({ numerator: 1n, denominator: 5n }),
-  ).toStrictEqual([
+  expect(toSternBrocotAncients({ num: 1n, den: 5n })).toStrictEqual([
     {
-      begin: { numerator: 1n, denominator: 1n },
-      diff: { numerator: 1n, denominator: 0n },
+      begin: { num: 1n, den: 1n },
+      diff: { num: 1n, den: 0n },
       length: 0n,
     },
     {
-      begin: { numerator: 1n, denominator: 1n },
-      diff: { numerator: 0n, denominator: 1n },
+      begin: { num: 1n, den: 1n },
+      diff: { num: 0n, den: 1n },
       length: 4n,
     },
   ]);
