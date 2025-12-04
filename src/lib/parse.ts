@@ -49,7 +49,7 @@ export const parseNumber = (s: string): IntegerTimesPower | null => {
   };
 };
 
-interface Fraction {
+export interface Fraction {
   numerator: bigint;
   denominator: bigint;
 }
