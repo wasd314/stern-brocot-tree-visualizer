@@ -12,7 +12,7 @@ export const parseNumber = (s: string): IntegerTimesPower | null => {
   const exponentPattern = "[eE](?<exponent>[+-]?[0-9]+)";
   const pattern = regex(`^(${mantissaPattern})(${exponentPattern})?$`);
 
-  const result = pattern.exec(s);
+  const result = pattern.exec(s.replaceAll(" ", ""));
   if (!result) {
     return null;
   }
@@ -55,7 +55,7 @@ export interface Fraction {
 }
 
 export const parseFraction = (s: string): Fraction | null => {
-  const pattern = regex("^(?<num>[0-9.eE+-]+)(/(?<den>[0-9.eE+-]+))?$");
+  const pattern = regex("^(?<num>[ 0-9.eE+-]+)(/(?<den>[ 0-9.eE+-]+))?$");
   const result = pattern.exec(s);
   if (!result) {
     return null;

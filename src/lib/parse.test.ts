@@ -58,7 +58,7 @@ test("parseNumber: parse {former}.{latter}", () => {
     { s: "0010.3", mantissa: 103n, exponent: -1n },
     { s: "12.345", mantissa: 12345n, exponent: -3n },
     { s: "678.90", mantissa: 6789n, exponent: -1n },
-    { s: "001010.01", mantissa: 101001n, exponent: -2n },
+    { s: " 001010. 01 ", mantissa: 101001n, exponent: -2n },
     { s: "0001230.00034500000", mantissa: 1230000345n, exponent: -6n },
   ].forEach(({ s, mantissa, exponent }) => {
     expect(parseNumber(s)).toStrictEqual({ mantissa, exponent });
