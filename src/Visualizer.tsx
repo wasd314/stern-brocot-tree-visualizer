@@ -8,7 +8,6 @@ import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import Input from "@mui/material/Input";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -19,6 +18,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
 
 import {
   enumerateAncients,
@@ -28,6 +28,11 @@ import {
 const theme = createTheme({
   colorSchemes: {
     dark: true,
+  },
+  typography: {
+    button: {
+      textTransform: "none",
+    },
   },
 });
 
@@ -52,7 +57,13 @@ export const Visualizer = () => {
   return (
     <>
       <Stack spacing={2} direction="row">
-        <Input fullWidth inputRef={inputRef} />
+        <TextField
+          fullWidth
+          inputRef={inputRef}
+          label="Rational number"
+          variant="outlined"
+          defaultValue="1.23e4 / 567"
+        />
         <Button onClick={handleClick} variant="outlined">
           Show
         </Button>
@@ -147,15 +158,13 @@ const Container = () => {
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleValue} aria-label="function selection">
               <Tab label="Path" value="1" />
-              <Tab label="Preference" value="2" />
+              <Tab label="Settings" value="2" />
             </TabList>
           </Box>
           <TabPanel value="1" keepMounted>
             <Visualizer />
           </TabPanel>
-          <TabPanel value="2">
-            <h2>Preferences</h2>
-          </TabPanel>
+          <TabPanel value="2"></TabPanel>
         </TabContext>
       </Box>
     </ThemeProvider>
