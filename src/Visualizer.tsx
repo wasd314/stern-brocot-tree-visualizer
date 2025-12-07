@@ -1,22 +1,35 @@
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
-// import Button from "@mui/material/Button";
-// import Input from "@mui/material/Input";
-import { useRef, useState } from "react";
+import { type SyntheticEvent, useRef, useState } from "react";
 import { type Fraction, parseFraction } from "./lib/parse";
 import "./Visualizer.css";
-import Paper from "@mui/material/Paper";
 
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Input from "@mui/material/Input";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Tab from "@mui/material/Tab";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+
 import {
   enumerateAncients,
   toContinuedFraction,
 } from "./lib/continued_fraction";
+
+const theme = createTheme({
+  colorSchemes: {
+    dark: true,
+  },
+});
 
 export const Visualizer = () => {
   const [frac, setFrac] = useState<Fraction>({ num: 1n, den: 1n });
@@ -120,20 +133,32 @@ export const Visualizer = () => {
 };
 
 const Container = () => {
-  return (
-    <Tabs>
-      <TabList>
-        <Tab>Main</Tab>
-        <Tab>Settings</Tab>
-      </TabList>
+  const [value, setValue] = useState("1");
 
-      <TabPanel>
-        <Visualizer />
-      </TabPanel>
-      <TabPanel>
-        <h2>Any content 2</h2>
-      </TabPanel>
-    </Tabs>
+  const handleValue = (_event: SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ width: "100%" }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleValue} aria-label="function selection">
+              <Tab label="Path" value="1" />
+              <Tab label="Preference" value="2" />
+            </TabList>
+          </Box>
+          <TabPanel value="1" keepMounted>
+            <Visualizer />
+          </TabPanel>
+          <TabPanel value="2">
+            <h2>Preferences</h2>
+          </TabPanel>
+        </TabContext>
+      </Box>
+    </ThemeProvider>
   );
 };
 export default Container;
