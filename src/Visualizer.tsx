@@ -66,7 +66,7 @@ const Visualizer = () => {
           Show
         </Button>
       </Stack>
-      <p>
+      <p style={{textAlign: "center"}} >
         {formatApproximant(frac)} = [{integer}
         {rest.length > 0 && "; " + rest.join(", ")}]
       </p>
