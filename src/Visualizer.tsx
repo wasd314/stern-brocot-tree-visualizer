@@ -197,9 +197,9 @@ export const Setting = () => {
         </Typography>
         <Slider min={1} value={path.first} onChange={handleChangeFirst} />
         <Typography gutterBottom>
-          Show last {path.last} row{path.last > 1 && "s"}
+          Show last {path.last} rows
         </Typography>
-        <Slider min={1} value={path.last} onChange={handleChangeLast} />
+        <Slider min={2} value={path.last} onChange={handleChangeLast} />
         <FormControlLabel
           control={
             <Switch checked={path.insert} onChange={handleChangeInsert} />
