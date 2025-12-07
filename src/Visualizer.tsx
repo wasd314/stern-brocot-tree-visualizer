@@ -1,7 +1,3 @@
-import { type SyntheticEvent, useRef, useState } from "react";
-import { type Fraction, parseFraction } from "./lib/parse";
-import "./Visualizer.css";
-
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
@@ -19,11 +15,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
-
+import { type SyntheticEvent, useRef, useState } from "react";
 import {
   enumerateAncients,
   toContinuedFraction,
 } from "./lib/continued_fraction";
+import { type Fraction, parseFraction } from "./lib/parse";
 
 const theme = createTheme({
   colorSchemes: {
