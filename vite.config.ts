@@ -8,4 +8,5 @@ export default defineConfig({
   test: {
     environment: "node",
   },
+  cacheDir: "node_modules/.vite",
 });
