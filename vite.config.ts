@@ -9,4 +9,5 @@ export default defineConfig({
     environment: "node",
   },
   cacheDir: "node_modules/.vite",
+  base: "/stern-brocot-tree-visualizer/",
 });
