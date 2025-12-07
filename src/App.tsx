@@ -31,6 +31,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ width: "100%" }}>
+        <h1>Stern–Brocot Tree Visualizer</h1>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleValue} aria-label="function selection">
