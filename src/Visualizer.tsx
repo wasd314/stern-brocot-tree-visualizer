@@ -196,9 +196,7 @@ export const Setting = () => {
           Show first {path.first} row{path.first > 1 && "s"}
         </Typography>
         <Slider min={1} value={path.first} onChange={handleChangeFirst} />
-        <Typography gutterBottom>
-          Show last {path.last} rows
-        </Typography>
+        <Typography gutterBottom>Show last {path.last} rows</Typography>
         <Slider min={2} value={path.last} onChange={handleChangeLast} />
         <FormControlLabel
           control={
