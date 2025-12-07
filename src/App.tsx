@@ -1,5 +1,5 @@
 import { type SyntheticEvent, useState } from "react";
-import Visualizer from "./Visualizer";
+import { Setting, Visualizer } from "./Visualizer";
 import "./App.css";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -41,7 +41,9 @@ function App() {
           <TabPanel value="1" keepMounted>
             <Visualizer />
           </TabPanel>
-          <TabPanel value="2"></TabPanel>
+          <TabPanel value="2">
+            <Setting />
+          </TabPanel>
         </TabContext>
       </Box>
     </ThemeProvider>
