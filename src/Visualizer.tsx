@@ -33,36 +33,53 @@ export const Visualizer = () => {
     cf: [integer, ...rest],
   } = toContinuedFraction(frac);
   const rows = enumerateAncients({ frac, first, last });
+  const formatApproximant = (f: Fraction | string) => {
+    return typeof f === "string" ? f : `${f.num} / ${f.den}`;
+  };
   return (
-    <div>
-      <div>
-        <input type="text" ref={inputRef} />
-        <button onClick={handleClick}>Show</button>
-      </div>
-      <div>
-        {frac.num} / {frac.den} = [{integer}
+    <>
+      <Stack spacing={2} direction="row">
+        <Input fullWidth inputRef={inputRef} />
+        <Button onClick={handleClick} variant="outlined">
+          Show
+        </Button>
+      </Stack>
+      <p>
+        {formatApproximant(frac)} = [{integer}
         {rest.length > 0 && "; " + rest.join(", ")}]
-      </div>
-      <TableContainer>
+      </p>
+      <TableContainer component={Paper}>
         <Table
           // sx={{ minWidth: 650 }}
           size="small"
-          aria-label="a dense table"
+          aria-label="best approximants"
         >
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={2}>
-                Approximant
+                Best Approximant
               </TableCell>
               <TableCell align="center">Depth</TableCell>
-              <TableCell align="center">Left desc</TableCell>
-              <TableCell align="center">Right desc</TableCell>
+              <TableCell align="center" colSpan={2}>
+                Run
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">Lower</TableCell>
+              <TableCell align="center">Upper</TableCell>
+              <TableCell />
+              <TableCell align="center">Left</TableCell>
+              <TableCell align="center">Right</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell align="center">0/1</TableCell>
-              <TableCell align="center">1/0</TableCell>
+              <TableCell align="center">
+                {formatApproximant({ num: 0n, den: 1n })}
+              </TableCell>
+              <TableCell align="center">
+                {formatApproximant({ num: 1n, den: 0n })}
+              </TableCell>
               <TableCell />
               <TableCell />
               <TableCell />
@@ -74,25 +91,15 @@ export const Visualizer = () => {
               >
                 {"center" in row ? (
                   <TableCell align="center" colSpan={2}>
-                    {`${row.center.num}/${row.center.den}`}
+                    {formatApproximant(row.center)}
                   </TableCell>
                 ) : (
                   <>
                     <TableCell align="center">
-                      {"left" in row &&
-                        typeof row.left !== "string" &&
-                        `${row.left.num}/${row.left.den}`}
-                      {"left" in row &&
-                        typeof row.left === "string" &&
-                        row.left}
+                      {"left" in row && formatApproximant(row.left)}
                     </TableCell>
                     <TableCell align="center">
-                      {"right" in row &&
-                        typeof row.right !== "string" &&
-                        `${row.right.num}/${row.right.den}`}
-                      {"right" in row &&
-                        typeof row.right === "string" &&
-                        row.right}
+                      {"right" in row && formatApproximant(row.right)}
                     </TableCell>
                   </>
                 )}
@@ -108,7 +115,7 @@ export const Visualizer = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </>
   );
 };
 
