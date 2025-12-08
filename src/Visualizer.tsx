@@ -17,6 +17,7 @@ import { useRef, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
+  Ellipsis,
   enumerateAncients,
   toContinuedFraction,
 } from "./lib/continued_fraction";
@@ -161,12 +162,22 @@ export const Visualizer = () => {
                     </TableCell>
                   </>
                 )}
-                <TableCell align="center">{row.depth}</TableCell>
                 <TableCell align="center">
-                  {"leftIndex" in row && row.leftIndex}
+                  {row.depth === Ellipsis
+                    ? Ellipsis
+                    : insertSpace(row.depth, insert)}
                 </TableCell>
                 <TableCell align="center">
-                  {"rightIndex" in row && row.rightIndex}
+                  {"leftIndex" in row &&
+                    (row.leftIndex === Ellipsis
+                      ? Ellipsis
+                      : insertSpace(row.leftIndex, insert))}
+                </TableCell>
+                <TableCell align="center">
+                  {"rightIndex" in row &&
+                    (row.rightIndex === Ellipsis
+                      ? Ellipsis
+                      : insertSpace(row.rightIndex, insert))}
                 </TableCell>
               </TableRow>
             ))}
