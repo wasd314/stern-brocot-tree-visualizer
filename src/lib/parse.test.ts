@@ -2,12 +2,9 @@ import { expect, test } from "vitest";
 import { parseFraction, parseNumber } from "./parse";
 
 test("parseNumber: parse {integer}.?", () => {
-  ["", ".", "0", "000", "0000000000", "+1", "-1"].forEach((s) => {
-    expect(parseNumber(s)).toBe(null);
-    expect(parseNumber(s + ".")).toBe(null);
-  });
-
   [
+    { s: "0", mantissa: 0n, exponent: 0n },
+    { s: "0000", mantissa: 0n, exponent: 0n },
     { s: "1", mantissa: 1n, exponent: 0n },
     { s: "2", mantissa: 2n, exponent: 0n },
     { s: "3", mantissa: 3n, exponent: 0n },
@@ -20,14 +17,20 @@ test("parseNumber: parse {integer}.?", () => {
     { s: "230000", mantissa: 23n, exponent: 4n },
     { s: "00034500000", mantissa: 345n, exponent: 5n },
   ].forEach(({ s, mantissa, exponent }) => {
-    expect(parseNumber(s)).toStrictEqual({ mantissa, exponent });
-    expect(parseNumber(s + ".")).toStrictEqual({ mantissa, exponent });
+    [s, `${s}.`, `+${s}`, `+${s}.`].forEach((t) => {
+      expect(parseNumber(t)).toStrictEqual({ mantissa, exponent });
+    });
+    [`-${s}`, `-${s}.`].forEach((t) => {
+      expect(parseNumber(t)).toStrictEqual({ mantissa: -mantissa, exponent });
+    });
   });
 });
 
 test("parseNumber: parse .{latter}", () => {
   [".0", ".000", ".0000000000"].forEach((s) => {
-    expect(parseNumber(s)).toBe(null);
+    [s, `+${s}`, `-${s}`].forEach((t) => {
+      expect(parseNumber(t)).toStrictEqual({ mantissa: 0n, exponent: 0n });
+    });
   });
 
   [
@@ -44,12 +47,17 @@ test("parseNumber: parse .{latter}", () => {
     { s: ".00034500000", mantissa: 345n, exponent: -6n },
   ].forEach(({ s, mantissa, exponent }) => {
     expect(parseNumber(s)).toStrictEqual({ mantissa, exponent });
+    expect(parseNumber(`+${s}`)).toStrictEqual({ mantissa, exponent });
+    expect(parseNumber(`-${s}`)).toStrictEqual({
+      mantissa: -mantissa,
+      exponent,
+    });
   });
 });
 
 test("parseNumber: parse {former}.{latter}", () => {
   ["0.0", "00.000", "0.0000000000", "00000000000.000"].forEach((s) => {
-    expect(parseNumber(s)).toBe(null);
+    expect(parseNumber(s)).toStrictEqual({ mantissa: 0n, exponent: 0n });
   });
 
   [
@@ -62,6 +70,11 @@ test("parseNumber: parse {former}.{latter}", () => {
     { s: "0001230.00034500000", mantissa: 1230000345n, exponent: -6n },
   ].forEach(({ s, mantissa, exponent }) => {
     expect(parseNumber(s)).toStrictEqual({ mantissa, exponent });
+    expect(parseNumber(`+${s}`)).toStrictEqual({ mantissa, exponent });
+    expect(parseNumber(`-${s}`)).toStrictEqual({
+      mantissa: -mantissa,
+      exponent,
+    });
   });
 });
 
@@ -91,22 +104,26 @@ test("parseNumber: parse exponent", () => {
   });
 });
 
-test("parseFraction: reject", () => {
-  [
-    "0.0",
-    "00.000",
-    "0.0000000000",
-    "00000000000.000",
-    "0/1",
-    "1/0",
-    "",
-    "./1",
-  ].forEach((s) => {
-    expect(parseFraction(s)).toBe(null);
+test("parseNumber: reject", () => {
+  ["", ".", ".."].forEach((s) => {
+    expect(parseNumber(s)).toBe(null);
   });
 });
 
+test("parseFraction: reject", () => {
+  ["1/0", "", "/", "/.", "./", "./1", "./2", "1/.", "10./", "10.1/0"].forEach(
+    (s) => {
+      expect(parseFraction(s)).toBe(null);
+    },
+  );
+});
+
 test("parseNumber: {numerator}", () => {
+  ["0.0", "00.000", "0.0000000000", "00000000000.000", "0/1", "0/2"].forEach(
+    (s) => {
+      expect(parseFraction(s)).toStrictEqual({ num: 0n, den: 1n });
+    },
+  );
   [
     { s: "1", num: 1n, den: 1n },
     { s: "2", num: 2n, den: 1n },
