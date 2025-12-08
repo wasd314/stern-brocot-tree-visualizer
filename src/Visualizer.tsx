@@ -190,7 +190,7 @@ export const Setting = () => {
   };
   return (
     <>
-      <h2>Path Setting</h2>
+      <h3>Path Setting</h3>
       <FormGroup sx={{ width: "50%" }}>
         <Typography gutterBottom>
           Show first {path.first} row{path.first > 1 && "s"}
