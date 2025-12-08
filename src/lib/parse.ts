@@ -10,7 +10,9 @@ export const parseNumber = (s: string): IntegerTimesPower | null => {
   const mantissaPattern =
     "(?<former>[0-9]*)\\.(?<latter>[0-9]+)|(?<integer>[0-9]+)\\.?";
   const exponentPattern = "[eE](?<exponent>[+-]?[0-9]+)";
-  const pattern = regex(`^(${mantissaPattern})(${exponentPattern})?$`);
+  const pattern = regex(
+    `^(?<sign>[+-]?)(${mantissaPattern})(${exponentPattern})?$`,
+  );
 
   const result = pattern.exec(s.replaceAll(" ", ""));
   if (!result) {
@@ -33,8 +35,8 @@ export const parseNumber = (s: string): IntegerTimesPower | null => {
     }
   })();
 
-  if (mantissaPart.mantissa <= 0n) {
-    return null;
+  if (mantissaPart.mantissa === 0n) {
+    return { mantissa: 0n, exponent: 0n };
   }
   // normalize
   while (mantissaPart.mantissa % 10n == 0n) {
@@ -42,9 +44,10 @@ export const parseNumber = (s: string): IntegerTimesPower | null => {
     mantissaPart.exponent++;
   }
 
+  const sign = result.groups.sign === "-" ? -1n : 1n;
   const exponent = BigInt(result.groups.exponent ?? "");
   return {
-    mantissa: mantissaPart.mantissa,
+    mantissa: mantissaPart.mantissa * sign,
     exponent: mantissaPart.exponent + exponent,
   };
 };
@@ -65,7 +68,17 @@ export const parseFraction = (s: string): Fraction | null => {
   if (!num || !den) {
     return null;
   }
+  if (den.mantissa === 0n) {
+    return null;
+  }
+  if (num.mantissa === 0n) {
+    return { num: 0n, den: 1n };
+  }
   const exponent = num.exponent - den.exponent;
+  if (den.mantissa < 0n) {
+    num.mantissa *= -1n;
+    den.mantissa *= -1n;
+  }
   if (exponent >= 0n) {
     return {
       num: num.mantissa * 10n ** exponent,

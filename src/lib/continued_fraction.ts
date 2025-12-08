@@ -3,10 +3,15 @@ import { type Fraction } from "./parse";
 export const toContinuedFraction = ({ num: a, den: b }: Fraction) => {
   const cf = [];
   while (b !== 0n) {
-    cf.push(a / b);
-    [a, b] = [b, a % b];
+    let [q, r] = [a / b, a % b];
+    if (r < 0n) {
+      q -= 1n;
+      r += b;
+    }
+    cf.push(q);
+    [a, b] = [b, r];
   }
-  return { cf, gcd: a };
+  return { cf, gcd: a >= 0 ? a : -a };
 };
 
 interface DescendProps {
