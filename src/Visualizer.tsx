@@ -79,6 +79,7 @@ export const Visualizer = () => {
     if (!inputRef.current) return;
     const parsed = parseFraction(inputRef.current.value);
     if (!parsed) return;
+    if (parsed.num <= 0n) return;
     const { gcd } = toContinuedFraction(parsed);
     setFrac({ num: parsed.num / gcd, den: parsed.den / gcd });
   };
