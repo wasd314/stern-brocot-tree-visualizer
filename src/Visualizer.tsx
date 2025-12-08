@@ -91,6 +91,7 @@ export const Visualizer = () => {
     first: BigInt(first),
     last: BigInt(last),
   });
+  const cfString = `[${integer}${rest.length > 0 ? "; " + rest.join(", ") : ""}]`;
   return (
     <>
       <Stack spacing={2} direction="row">
@@ -106,8 +107,7 @@ export const Visualizer = () => {
         </Button>
       </Stack>
       <p style={{ textAlign: "center", overflowWrap: "break-word" }}>
-        {formatApproximant(frac, insert)} = [{integer}
-        {rest.length > 0 && "; " + rest.join(", ")}]
+        {formatApproximant(frac, insert)} = {cfString}
       </p>
       <TableContainer component={Paper}>
         <Table
@@ -190,7 +190,7 @@ export const Setting = () => {
   };
   return (
     <>
-      <h2>Path Setting</h2>
+      <h3>Path Setting</h3>
       <FormGroup sx={{ width: "50%" }}>
         <Typography gutterBottom>
           Show first {path.first} row{path.first > 1 && "s"}

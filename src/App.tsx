@@ -31,9 +31,14 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ width: "100%" }}>
+        <h2>Stern–Brocot Tree Visualizer</h2>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleValue} aria-label="function selection">
+            <TabList
+              onChange={handleValue}
+              aria-label="function selection"
+              variant="scrollable"
+            >
               <Tab label="Path" value="1" />
               <Tab label="Settings" value="2" />
             </TabList>
