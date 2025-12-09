@@ -54,7 +54,10 @@ const useSettingStore = create<SettingStore>()(
  * @param n 数値
  * @returns 空白を入れた文字列
  */
-const insertSpace = (n: bigint, insert: boolean) => {
+const insertSpace = (n: bigint, insert: boolean): string => {
+  if (n < 0n) {
+    return "-" + insertSpace(-n, insert);
+  }
   const s = `${n}`;
   const q = Math.floor(s.length / 3);
   const r = s.length - q * 3;
