@@ -17,7 +17,7 @@ import { useRef, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
-  Ellipsis,
+  ellipsis,
   enumerateAncients,
   toContinuedFraction,
 } from "./lib/continued_fraction";
@@ -54,7 +54,10 @@ const useSettingStore = create<SettingStore>()(
  * @param n 数値
  * @returns 空白を入れた文字列
  */
-const insertSpace = (n: bigint, insert: boolean) => {
+const insertSpace = (n: bigint, insert: boolean): string => {
+  if (n < 0n) {
+    return "-" + insertSpace(-n, insert);
+  }
   const s = `${n}`;
   const q = Math.floor(s.length / 3);
   const r = s.length - q * 3;
@@ -79,7 +82,7 @@ export const Visualizer = () => {
     if (!inputRef.current) return;
     const parsed = parseFraction(inputRef.current.value);
     if (!parsed) return;
-    if (parsed.num <= 0n) return;
+    // if (parsed.num <= 0n) return;
     const { gcd } = toContinuedFraction(parsed);
     setFrac({ num: parsed.num / gcd, den: parsed.den / gcd });
   };
@@ -164,20 +167,20 @@ export const Visualizer = () => {
                   </>
                 )}
                 <TableCell align="center">
-                  {row.depth === Ellipsis
-                    ? Ellipsis
+                  {row.depth === ellipsis
+                    ? ellipsis
                     : insertSpace(row.depth, insert)}
                 </TableCell>
                 <TableCell align="center">
                   {"leftIndex" in row &&
-                    (row.leftIndex === Ellipsis
-                      ? Ellipsis
+                    (row.leftIndex === ellipsis
+                      ? ellipsis
                       : insertSpace(row.leftIndex, insert))}
                 </TableCell>
                 <TableCell align="center">
                   {"rightIndex" in row &&
-                    (row.rightIndex === Ellipsis
-                      ? Ellipsis
+                    (row.rightIndex === ellipsis
+                      ? ellipsis
                       : insertSpace(row.rightIndex, insert))}
                 </TableCell>
               </TableRow>
@@ -207,9 +210,19 @@ export const Setting = () => {
         <Typography gutterBottom>
           Show first {path.first} row{path.first > 1 && "s"}
         </Typography>
-        <Slider min={1} value={path.first} onChange={handleChangeFirst} />
+        <Slider
+          min={1}
+          valueLabelDisplay="auto"
+          value={path.first}
+          onChange={handleChangeFirst}
+        />
         <Typography gutterBottom>Show last {path.last} rows</Typography>
-        <Slider min={2} value={path.last} onChange={handleChangeLast} />
+        <Slider
+          min={2}
+          valueLabelDisplay="auto"
+          value={path.last}
+          onChange={handleChangeLast}
+        />
         <FormControlLabel
           control={
             <Switch checked={path.insert} onChange={handleChangeInsert} />

@@ -1,7 +1,9 @@
 import { expect, test } from "vitest";
 import {
-  Ellipsis,
+  type EnumeratedRow,
   enumerateAncients,
+  greaterEllipsis,
+  lessEllipsis,
   toContinuedFraction,
   toSternBrocotAncients,
 } from "./continued_fraction";
@@ -94,7 +96,7 @@ test("enumerateAncients", () => {
     { center: { num: 1n, den: 3n }, depth: 2n, leftIndex: 2n },
   ]);
 
-  // 2/5
+  // 2/5 = [0; 2, 2]
   expect(
     enumerateAncients({
       frac: { num: 2n, den: 5n },
@@ -126,17 +128,7 @@ test("enumerateAncients", () => {
     { center: { num: 29n, den: 11n }, depth: 7n, rightIndex: 2n },
   ]);
 
-  const lessEllipsis = {
-    left: Ellipsis,
-    depth: Ellipsis,
-    rightIndex: Ellipsis,
-  };
-  const greaterEllipsis = {
-    right: Ellipsis,
-    depth: Ellipsis,
-    leftIndex: Ellipsis,
-  };
-  // 36524219/100000
+  // 36524219/100000 = [365; 4, 7, 1, 3, 24, 6, 2, 2]
   expect(
     enumerateAncients({
       frac: { num: 36524219n, den: 100000n },
@@ -216,5 +208,93 @@ test("enumerateAncients", () => {
       rightIndex: 0n,
     },
     { center: { num: 36524219n, den: 100000n }, depth: 413n, rightIndex: 1n },
+  ]);
+
+  // 0/1
+  expect(
+    enumerateAncients({ frac: { num: 0n, den: 1n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    { center: { num: 0n, den: 1n }, depth: -1n, rightIndex: -1n },
+  ]);
+
+  // -1/1
+  expect(
+    enumerateAncients({ frac: { num: -1n, den: 1n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    { left: { num: 0n, den: 1n }, depth: -1n, rightIndex: -1n },
+    { center: { num: -1n, den: 1n }, depth: -2n, rightIndex: -2n },
+  ]);
+
+  // -2/1
+  expect(
+    enumerateAncients({ frac: { num: -2n, den: 1n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    { left: { num: 0n, den: 1n }, depth: -1n, rightIndex: -1n },
+    { left: { num: -1n, den: 1n }, depth: -2n, rightIndex: -2n },
+    { center: { num: -2n, den: 1n }, depth: -3n, rightIndex: -3n },
+  ]);
+
+  // -10/1
+  expect(
+    enumerateAncients({ frac: { num: -10n, den: 1n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    { left: { num: 0n, den: 1n }, depth: -1n, rightIndex: -1n },
+    lessEllipsis,
+    { left: { num: -9n, den: 1n }, depth: -10n, rightIndex: -10n },
+    { center: { num: -10n, den: 1n }, depth: -11n, rightIndex: -11n },
+  ]);
+
+  // -9/4 = [-3; 1, 3]
+  expect(
+    enumerateAncients({ frac: { num: -9n, den: 4n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    { left: { num: 0n, den: 1n }, depth: -1n, rightIndex: -1n },
+    { left: { num: -1n, den: 1n }, depth: -2n, rightIndex: -2n },
+    {
+      left: { num: -3n, den: 1n },
+      right: { num: -2n, den: 1n },
+      depth: -3n,
+      leftIndex: 0n,
+      rightIndex: -3n,
+    },
+    { left: { num: -5n, den: 2n }, depth: -2n, leftIndex: 1n, rightIndex: 0n },
+    { left: { num: -7n, den: 3n }, depth: -1n, rightIndex: 1n },
+    { center: { num: -9n, den: 4n }, depth: 0n, rightIndex: 2n },
+  ]);
+
+  // -1/2 = [-1; 2]
+  expect(
+    enumerateAncients({ frac: { num: -1n, den: 2n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    {
+      left: { num: -1n, den: 1n },
+      right: { num: 0n, den: 1n },
+      depth: -1n,
+      leftIndex: 0n,
+      rightIndex: -1n,
+    },
+    { center: { num: -1n, den: 2n }, depth: 0n, leftIndex: 1n },
+  ]);
+
+  // -1/3 = [-1; 1, 2]
+  expect(
+    enumerateAncients({ frac: { num: -1n, den: 3n }, first: 1n, last: 2n }),
+  ).toStrictEqual<EnumeratedRow[]>([
+    { left: { num: 1n, den: 1n }, depth: 0n, rightIndex: 0n },
+    {
+      left: { num: -1n, den: 1n },
+      right: { num: 0n, den: 1n },
+      depth: -1n,
+      leftIndex: 0n,
+      rightIndex: -1n,
+    },
+    { left: { num: -1n, den: 2n }, depth: 0n, leftIndex: 1n, rightIndex: 0n },
+    { center: { num: -1n, den: 3n }, depth: 1n, rightIndex: 1n },
   ]);
 });
