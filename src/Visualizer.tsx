@@ -116,7 +116,6 @@ export const Visualizer = () => {
       </p>
       <TableContainer component={Paper}>
         <Table
-          // sx={{ minWidth: 650 }}
           size="small"
           aria-label="best approximants"
         >
