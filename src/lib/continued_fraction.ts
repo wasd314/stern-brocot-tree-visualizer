@@ -127,8 +127,10 @@ export const enumerateAncients = ({
   const min = (a: bigint, b: bigint) => (a <= b ? a : b);
   const max = (a: bigint, b: bigint) => (a >= b ? a : b);
   const rows = paths.flatMap(({ begin, diff, length }, index) => {
+    const absLength = max(length, -length);
+    const signLength = length >= 0n ? 1n : -1n;
     const seq: EnumeratedRow[] =
-      index === 0 && length > 0
+      index === 0 && length !== 0n
         ? [
             {
               left: { num: 1n, den: 1n },
@@ -138,29 +140,29 @@ export const enumerateAncients = ({
           ]
         : [];
     const isLeft = index % 2 === 1;
-    const first1 = min(first ?? length, length - 1n);
-    const last1 = max(length - (last ?? length) + 1n, 1n);
+    const first1 = min(first ?? absLength, absLength - 1n);
+    const last1 = max(absLength - (last ?? absLength) + 1n, 1n);
     const middleRow = (i: bigint) =>
       isLeft
         ? {
-            right: descend({ begin, diff, length: i }),
-            depth: depth + i,
-            leftIndex: i,
+            right: descend({ begin, diff, length: i * signLength }),
+            depth: depth + i * signLength,
+            leftIndex: i * signLength,
           }
         : {
-            left: descend({ begin, diff, length: i }),
-            depth: depth + i,
-            rightIndex: i,
+            left: descend({ begin, diff, length: i * signLength }),
+            depth: depth + i * signLength,
+            rightIndex: i * signLength,
           };
     // push [1, first1] | [last1, length - 1]
     if (first1 >= last1 - 1n) {
       // united
       seq.push(
-        ...Array.from({ length: Number(length - 1n) }, (_, i1) =>
+        ...Array.from({ length: Number(absLength - 1n) }, (_, i1) =>
           middleRow(BigInt(i1) + 1n),
         ),
       );
-    } else if (length > 0) {
+    } else if (absLength !== 0n) {
       // split
       const skip: GreaterEllipsisRow | LessEllipsisRow = isLeft
         ? { right: Ellipsis, depth: Ellipsis, leftIndex: Ellipsis }
@@ -173,34 +175,34 @@ export const enumerateAncients = ({
         ),
         skip,
         // [last1, length - 1]
-        ...Array.from({ length: Number(length - last1) }, (_, i1) =>
+        ...Array.from({ length: Number(absLength - last1) }, (_, i1) =>
           middleRow(BigInt(i1) + last1),
         ),
       );
     }
     // push [length]
-    if (isLeft) {
+    if (index === n - 1) {
       seq.push(
-        index === n - 1
+        isLeft
           ? {
               center: descend({ begin, diff, length }),
               depth: depth + length,
               leftIndex: length,
             }
           : {
+              center: descend({ begin, diff, length }),
+              depth: depth + length,
+              rightIndex: length,
+            },
+      );
+    } else if (length >= 0n) {
+      seq.push(
+        isLeft
+          ? {
               left: descend({ begin, diff, length }),
               depth: depth + length,
               leftIndex: length,
               rightIndex: 0n,
-            },
-      );
-    } else {
-      seq.push(
-        index === n - 1
-          ? {
-              center: descend({ begin, diff, length }),
-              depth: depth + length,
-              rightIndex: length,
             }
           : {
               right: descend({ begin, diff, length }),
@@ -209,6 +211,15 @@ export const enumerateAncients = ({
               leftIndex: 0n,
             },
       );
+    } else {
+      // assert(index === 0 && !isLeft && length < 0n);
+      seq.push({
+        left: descend({ begin, diff, length: length - 1n }),
+        right: descend({ begin, diff, length }),
+        depth: depth + length,
+        rightIndex: length,
+        leftIndex: 0n,
+      });
     }
     depth += length;
     return seq;
