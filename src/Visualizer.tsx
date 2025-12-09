@@ -115,10 +115,7 @@ export const Visualizer = () => {
         {formatApproximant(frac, insert)} = {cfString}
       </p>
       <TableContainer component={Paper}>
-        <Table
-          size="small"
-          aria-label="best approximants"
-        >
+        <Table size="small" aria-label="best approximants">
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={2}>
