@@ -80,7 +80,6 @@ interface RightEqualRow {
   rightIndex: bigint;
 }
 type Ellipsis = "⋮";
-export const Ellipsis = "⋮";
 
 interface GreaterEllipsisRow {
   right: Ellipsis;
@@ -92,7 +91,7 @@ interface LessEllipsisRow {
   depth: Ellipsis;
   rightIndex: Ellipsis;
 }
-type EnumeratedRow =
+export type EnumeratedRow =
   | LessRow
   | TurningLessRow
   | GreaterRow
@@ -101,6 +100,18 @@ type EnumeratedRow =
   | RightEqualRow
   | GreaterEllipsisRow
   | LessEllipsisRow;
+
+export const ellipsis = "⋮";
+export const lessEllipsis: LessEllipsisRow = {
+  left: ellipsis,
+  depth: ellipsis,
+  rightIndex: ellipsis,
+};
+export const greaterEllipsis: GreaterEllipsisRow = {
+  right: ellipsis,
+  depth: ellipsis,
+  leftIndex: ellipsis,
+};
 
 interface EnumerateAncientsProps {
   frac: Fraction;
@@ -164,10 +175,7 @@ export const enumerateAncients = ({
       );
     } else if (absLength !== 0n) {
       // split
-      const skip: GreaterEllipsisRow | LessEllipsisRow = isLeft
-        ? { right: Ellipsis, depth: Ellipsis, leftIndex: Ellipsis }
-        : { left: Ellipsis, depth: Ellipsis, rightIndex: Ellipsis };
-      // console.log({index, length, first1, last1});
+      const skip = isLeft ? greaterEllipsis : lessEllipsis;
       seq.push(
         // [1, first1]
         ...Array.from({ length: Number(first1) }, (_, i1) =>
